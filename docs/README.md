@@ -1,0 +1,3 @@
+# kognitwin-databricks-specification
+
+PLACEHOLDER
