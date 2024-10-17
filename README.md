@@ -50,6 +50,47 @@ Data in Kognitwin is served from the `GET /assets` endpoint. To setup an integra
 ```
 The data in Databricks can then be queried by HTTP `GET /assets?source=<id>`.
 
+This can also be used for browsing the Unity Catalog.
+Example:
+```json
+{
+  "id": "<insert id>",
+  "name": "Databricks catalog",
+  "type": "RemoteWebApi",
+  "server": {
+    "url": "https://<databricks-workspace>.azuredatabricks.net/api/2.0/unity-catalog",
+    "endpoints": [
+      {
+        "path": "/",
+        "query": {
+          "type": "listCatalogs"
+        },
+        "token": "<insert token>",
+        "headers": {
+          "Content-Type": "application/json",
+          "User-Agent": "Kognitwin"
+        },
+        "transform": [
+            {
+               "condition": "eq($query.type,listCatalogs)",
+               "query": "catalogs"
+            },
+            {
+               "condition": "eq($query.type,listSchemas)",
+               "query": "schemas?catalog_name=$(query.catalog)"
+            },
+            {
+               "condition": "eq($query.type,listTables)",
+               "query": "tables?catalog_name=$(query.catalog)&schema_name=$(query.schema)"
+            }
+        ],
+        "assetItems": "$body"
+      }
+     ]
+  }
+}
+```
+
 ## Data ingestion
 Kognitwin has functionality to ingest data from Delta Shares or SQL Warehouses in Databricks. This is achieved by utilizing the orchestration engine in Kognitwin. For the sake of simplicity, examples of manual ingestion are provided here, but other means or triggers are available in Kognitwin. To trigger a manual ingestion, do a HTTP `POST /tasks/queue` with a payload. The payload depends on whether to import data from Delta Share or SQL Warehouse.
 
@@ -95,3 +136,5 @@ To import data from a SQL Warehouse, use the `importDatabricks` task with the fo
   }
 }
 ```
+
+
