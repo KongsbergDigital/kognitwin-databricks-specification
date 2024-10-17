@@ -33,8 +33,9 @@ Data in Kognitwin is served from the `GET /assets` endpoint. To setup an integra
         "path": "/sql/statements",
         "headers": {
           "Content-Type": "application/json",
-          "Authorization": "<insert bearer token>"
+          "User-Agent": "Kognitwin",
         },
+        "token": "<insert token>"
         "assetItems": "$body",
         "method": "post",
         "body": {
