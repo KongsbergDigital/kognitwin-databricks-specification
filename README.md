@@ -131,8 +131,10 @@ To import data from a SQL Warehouse, use the `importDatabricks` task with the fo
       "data": "$item"
     },
     "databricks": {
-      "endpoint": "<insert endpoint>",
-      "token": "<insert token>"
+      "token": "<insert token>",
+      "host": "<insert host>",
+      "path": "<insert path>",
+      "sqlStatement": "<insert sql statement>"      
     }
   }
 }
