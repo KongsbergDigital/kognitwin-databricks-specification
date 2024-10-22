@@ -270,7 +270,7 @@ GET {{baseUrl}}/assets?source=db:site1:example1,db:site2:example1
             "site": "site1"
         },
         "meta": {
-            "lastUpdated": "2024-10-22T08:25:21.212Z",
+            "lastUpdated": "2024-10-22T09:42:46.526Z",
             "createdBy": "messagesApi",
             "system": "Databricks"
         },
