@@ -206,7 +206,7 @@ import uuid
 from datetime import datetime
 
 client_id = '<insert servive principal id>'
-client_secret = dbutils.secrets.get(scope='<inser secret scope>', key='<insert secret key>')
+client_secret = dbutils.secrets.get(scope='<insert secret scope>', key='<insert secret key>')
 token_url = '<insert authorization url>'
 
 token_data = {
@@ -249,7 +249,7 @@ headers, body = to_structured(event)
 headers['Authorization'] = f'Bearer {access_token}'
 headers['User-Agent'] = 'Databricks'
 
-response = requests.post("https://<insert Kognitwin host url>/api/messages", headers=headers, data=body)
+response = requests.post("https://<insert Kognitwin host>/api/messages", headers=headers, data=body)
 
 print(f"Response status: {response.status_code}")
 print(f"Response body: {response.text}")
