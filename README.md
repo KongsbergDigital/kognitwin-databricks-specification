@@ -141,7 +141,7 @@ To import data from a SQL Warehouse, use the `importDatabricks` task with the fo
 ```
 
 ### Push interrface
-Whenever it is possible, a preferred solution is to push new data to Kognitwin. This is done using cloudevents, where the cloudevent type is predefined and configure in Kognitwin. The cpnfiguration in Kognitwin will include a tranform from the cloudevent into the asset format used by Kognitwin. A simplified example config is shown here:
+Whenever it is possible, a preferred solution is to push new data to Kognitwin. This is done using cloudevents, where the cloudevent type is predefined and configured in Kognitwin. The configuration in Kognitwin will include a tranform from the cloudevent into the asset format used by Kognitwin. A simplified example config is shown here:
 ```json
 {
 	"id": "db:messages:examples-test1",
@@ -175,7 +175,7 @@ Whith this configuration, a cloudevent example could look like this:
 ```json
 {
   "id": "d8489e61-6989-48d8-b9b3-a0df5655cf33",
-  "time": "2024-10-22T09:42:46.208Z",
+  "time": "2024-10-22T09:42:45.145Z",
   "type": "com.databricks.examples.test1",
   "source": "Databricks source1",
   "specversion": "1.0",
@@ -253,9 +253,51 @@ response = requests.post("https://<insert Kognitwin host url>/api/messages", hea
 
 print(f"Response status: {response.status_code}")
 print(f"Response body: {response.text}")
+```
 
-
-
+The data created in Kognitwin will look like this:
+GET {{baseUrl}}/assets?source=db:site1:example1,db:site2:example1
+```json
+[
+    {
+        "id": "1",
+        "source": "db:site1:example1",
+        "type": "TestMessage",
+        "name": "test record 1",
+        "data": {
+            "itemId": "1",
+            "name": "test record 1",
+            "site": "site1"
+        },
+        "meta": {
+            "lastUpdated": "2024-10-22T08:25:21.212Z",
+            "createdBy": "messagesApi",
+            "system": "Databricks"
+        },
+        "derived": {
+            "site": "site1"
+        }
+    },
+    {
+        "id": "2",
+        "source": "db:site2:example1",
+        "type": "TestMessage",
+        "name": "test record 2",
+        "data": {
+            "itemId": "2",
+            "name": "test record 2",
+            "site": "site2"
+        },
+        "meta": {
+            "lastUpdated": "2024-10-22T09:42:46.526Z",
+            "createdBy": "messagesApi",
+            "system": "Databricks"
+        },
+        "derived": {
+            "site": "site2"
+        }
+    }
+]
 ```
 
 
