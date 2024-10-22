@@ -140,4 +140,122 @@ To import data from a SQL Warehouse, use the `importDatabricks` task with the fo
 }
 ```
 
+### Push interrface
+Whenever it is possible, a preferred solution is to push new data to Kognitwin. This is done using cloudevents, where the cloudevent type is predefined and configure in Kognitwin. The cpnfiguration in Kognitwin will include a tranform from the cloudevent into the asset format used by Kognitwin. A simplified example config is shown here:
+```json
+{
+	"id": "db:messages:examples-test1",
+	"name": "Databricks example test message 1",
+	"type": "messages",
+	"messagesImport": {
+		"messageType": "com.databricks.examples.test1",
+		"assetItems": "$message.data",
+		"transform": [
+			{
+				"id": "$item.itemId",
+				"source": "db:$(item.site):example1",
+				"type": "TestMessage",
+				"name": "$item.name",
+				"data": "$item",
+				"meta": {
+					"lastUpdated": "$date",
+					"createdBy": "$identity",
+					"system": "Databricks"
+				},
+				"derived": {
+					"site": "$item.site"
+				}
+			}
+		],
+		"postOptions": {}
+	}
+}
+```
+Whith this configuration, a cloudevent example could look like this:
+```json
+{
+  "id": "d8489e61-6989-48d8-b9b3-a0df5655cf33",
+  "time": "2024-10-22T09:42:46.208Z",
+  "type": "com.databricks.examples.test1",
+  "source": "Databricks source1",
+  "specversion": "1.0",
+  "datacontenttype": "application/json",
+  "schemaversion": "1.0",
+  "data": [
+    {
+      "itemId": "1",
+      "name": "test record 1",
+      "site": "site1"
+    },
+    {
+      "itemId": "2",
+      "name": "test record 2",
+      "site": "site2"
+    }
+  ]
+}
+```
+
+To generate data for this, a databricks notebook can be used. A python script send the cloud event is shown below.
+```python
+from cloudevents.http import CloudEvent
+from cloudevents.conversion import to_structured
+import requests
+import json
+import uuid
+from datetime import datetime
+
+client_id = '<insert servive principal id>'
+client_secret = dbutils.secrets.get(scope='<inser secret scope>', key='<insert secret key>')
+token_url = '<insert authorization url>'
+
+token_data = {
+    'grant_type': 'client_credentials',
+    'client_id': client_id,
+    'client_secret': client_secret,
+    'scope': 'openid offline_access'
+}
+
+token_response = requests.post(token_url, data=token_data)
+token_response.raise_for_status()
+access_token = token_response.json().get('access_token')
+
+attributes = {
+    "id": str(uuid.uuid4()),
+    "time": datetime.utcnow().isoformat() + "Z",
+    "type": "com.databricks.examples.test1",
+    "source": "Databricks source1",
+    "specversion": "1.0",
+    "datacontenttype": "application/json",
+    "schemaversion": "1.0"
+}
+
+data = [
+    {
+        "itemId": "1",
+        "name": "test record 1",
+        "site": "site1"
+    },
+    {
+        "itemId": "2",
+        "name": "test record 2",
+        "site": "site2"
+    }
+]
+
+event = CloudEvent(attributes, data)
+
+headers, body = to_structured(event)
+headers['Authorization'] = f'Bearer {access_token}'
+headers['User-Agent'] = 'Databricks'
+
+response = requests.post("https://<insert Kognitwin host url>/api/messages", headers=headers, data=body)
+
+print(f"Response status: {response.status_code}")
+print(f"Response body: {response.text}")
+
+
+
+```
+
 
