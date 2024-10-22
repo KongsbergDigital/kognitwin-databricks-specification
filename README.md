@@ -140,8 +140,8 @@ To import data from a SQL Warehouse, use the `importDatabricks` task with the fo
 }
 ```
 
-### Push interrface
-Whenever it is possible, a preferred solution is to push new data to Kognitwin. This is done using cloudevents, where the cloudevent type is predefined and configured in Kognitwin. The configuration in Kognitwin will include a tranform from the cloudevent into the asset format used by Kognitwin. A simplified example config is shown here:
+### Push interface
+Whenever it is possible, a preferred solution is to push new/updated data to Kognitwin. This is done using cloudevents, where the cloudevent type is predefined and configured in Kognitwin. The configuration in Kognitwin will include a tranform from the cloudevent into the asset format used by Kognitwin. A simplified example config is shown here:
 ```json
 {
 	"id": "db:messages:examples-test1",
@@ -196,7 +196,7 @@ Whith this configuration, a cloudevent example could look like this:
 }
 ```
 
-To generate data for this, a databricks notebook can be used. A python script send the cloud event is shown below.
+To generate data for this, a databricks notebook can be used. A python script send the cloud event is shown below. In this example, the payload is hardcoded, but in the real integration the data payload would come from any of the data sources available within databricks or databricks' connected sources.
 ```python
 from cloudevents.http import CloudEvent
 from cloudevents.conversion import to_structured
