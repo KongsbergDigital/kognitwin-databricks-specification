@@ -205,7 +205,7 @@ import json
 import uuid
 from datetime import datetime
 
-client_id = '<insert servive principal id>'
+client_id = '<insert service principal id>'
 client_secret = dbutils.secrets.get(scope='<insert secret scope>', key='<insert secret key>')
 token_url = '<insert authorization url>'
 
