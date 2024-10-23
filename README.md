@@ -16,7 +16,7 @@ There are two different integration methods from Kognitwin to Databricks:
 
 1. **Data on demand**: Execute SQL statements directly on the Databricks' endpoints to load data on demand. The data is not stored in Kognitwin but can be displayed in a digital twin to enhance decision making. This method has limited contextualization possibilities. 
 
-2. **Data ingestion**: Ingesting data from Databricks to Kognitwin can either be done from SQL Warehouses or Delta Sharing. The ingested data is stored in Kognitwin and can be transformed and contextualized to suit the requirements of a digital twin. 
+2. **Data ingestion**: Ingesting data from Databricks to Kognitwin can either be done from SQL Warehouses or Delta Sharing. The data can also be pushed to Kognitwin using Cloudevents. The ingested data is stored in Kognitwin and can be transformed and contextualized to suit the requirements of a digital twin. 
 
 ## Data on demand
 Data in Kognitwin is served from the `GET /assets` endpoint. To setup an integration to Databricks on this endpoint a source is required. The source must be of type `RemoteWebApi` and contain at least one endpoint definition.
